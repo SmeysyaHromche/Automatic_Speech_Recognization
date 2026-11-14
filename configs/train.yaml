@@ -1,0 +1,18 @@
+batch_size: 16
+device: "cpu"
+epochs: 20
+lr: 0.15
+
+data:
+  dataset_name: "clean"
+  split: "train.100"
+  shuffle_seeds: 42
+  augmentation:
+    enable: True
+    mel_enable: False
+  mel:
+    enable: True
+    sr: 16000
+    n_fft: 400
+    hop_len: 160
+    n_mels: 80
