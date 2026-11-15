@@ -1,4 +1,6 @@
-
+from .audio_dataset import AudioDataset
+from src.config import DataConfig, TrainConfig
+from torch.utils.data import DataLoader
 import torch
 import torch.nn.functional as F
 
@@ -25,3 +27,20 @@ def collate_fn(batch):
     audios = torch.stack(padded_audios)
 
     return audios, texts, lengths
+
+def get_dataloader(config:DataConfig, with_batches:bool=False) -> DataLoader:
+    dataset = AudioDataset(config.train_data)
+    dataloader = DataLoader(
+        dataset=dataset,
+        batch_size= config.batch_size if with_batches else None,
+        collate_fn=collate_fn,
+        num_workers=0
+    )
+
+    return dataloader
+
+def get_train_valid_dataloaders(config:TrainConfig) -> tuple[DataLoader, DataLoader]:
+    train_dataloader = get_dataloader(config.train_data, with_batches=True)
+    valid_dataloader = get_dataloader(config.validation_data)
+
+    return train_dataloader, valid_dataloader
