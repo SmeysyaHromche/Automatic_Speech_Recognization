@@ -2,10 +2,25 @@ batch_size: 16
 device: "cpu"
 epochs: 20
 lr: 0.15
+max_steps_per_epoch: -1
 
-data:
+train_data:
   dataset_name: "clean"
   split: "train.100"
+  shuffle_seeds: 42
+  augmentation:
+    enable: True
+    mel_enable: False
+  mel:
+    enable: True
+    sr: 16000
+    n_fft: 400
+    hop_len: 160
+    n_mels: 80
+
+validation_data:
+  dataset_name: "clean"
+  split: "validation"
   shuffle_seeds: 42
   augmentation:
     enable: True
@@ -22,3 +37,4 @@ logging:
   wandb_enable: False
   wandb_project_name: "SFC"
   wandb_experiment_name: "0.0.1"
+  logging_each_n_step: 50

@@ -7,6 +7,8 @@ class TrainConfig(BaseModel):
     device:str
     epochs:int
     lr:float
+    max_steps_per_epoch:int
 
-    data: DataConfig
+    train_data: DataConfig
+    validation_data: DataConfig
     logging_config: LoggingConfig
