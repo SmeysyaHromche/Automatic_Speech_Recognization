@@ -49,14 +49,15 @@ def log_wandb_one_train_step(
 
 def log_cli_one_train_step(
     epoch: int,
+    epochs: int,
     idx_batch:int,
     global_step:int,
     loss_value:float,
     grad_norm_value:float      
 ) -> None:
-    print(f"{epoch} epoch, {idx_batch} batch, {global_step} glob step, {loss_value:.4f} loss, {grad_norm_value:.4f} grad")
+    print(f"Train per step: {epoch}/{epochs} epoch, {idx_batch} batch, {global_step} glob step, {loss_value:.4f} loss, {grad_norm_value:.4f} grad")
 
-def log_wandb_one_epoch(
+def log_wandb_one_train_epoch(
     run:wandb.Run,
     epoch:int,
     avg_loss_value:float,
@@ -68,9 +69,31 @@ def log_wandb_one_epoch(
         f"{TRAIN_EPOCH_METRIC}avg_grad_norm": avg_grad_norm_value,
     })
 
-def log_cli_one_epoch(
-    epoch: int,
+def log_cli_one_train_epoch(
+    epoch:int,
+    epochs:int,
     avg_loss_value:float,
     avg_grad_norm_value:float      
 ) -> None:
-    print(f"{epoch} epoch, {avg_loss_value:.4f} avg loss, {avg_grad_norm_value:.4f} avg grad norm")
+    print(f"Train per epoch: {epoch}/{epochs} epoch, {avg_loss_value:.4f} avg loss, {avg_grad_norm_value:.4f} avg grad norm")
+
+def log_wandb_validation(
+    run:wandb.Run,
+    epoch:int,
+    validation_prefix:str, 
+    avg_loss_value:float, 
+    wer_value:float
+)->None:
+    run.log({
+        EPOCH_DIM: epoch,
+        f"{validation_prefix}avg_loss": avg_loss_value,
+        f"{validation_prefix}wer": wer_value,
+    })
+
+def log_cli_validation(
+    epoch:int,
+    epochs:int,
+    avg_loss_value:float, 
+    wer_value:float  
+) -> None:
+    print(f"Eval per epoch: {epoch}/{epochs} epoch, {avg_loss_value:.4f} avg loss, {wer_value:.4f} wer")
