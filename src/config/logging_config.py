@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
-class LoggingConfig:
+class LoggingConfig(BaseModel):
     log_in_cli:bool
     log_in_cli_per_step:bool
     wandb_enable:bool

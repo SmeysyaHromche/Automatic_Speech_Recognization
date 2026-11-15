@@ -13,9 +13,9 @@ def train_one_epoch(
         dataloader:DataLoader,
         model:nn.Module,
         device:torch.device,
-        run:wb.Run,
         optimizer: optim.Optimizer,
-        ctc_loss:nn.CTCLoss
+        ctc_loss:nn.CTCLoss,
+        run:wb.Run|None=None
     ) -> tuple[int, float, float]:
     model.train()
 

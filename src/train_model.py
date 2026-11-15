@@ -10,12 +10,10 @@ vocab = Vocabulary()
 
 config = utils.get_train_config()
 
-if config.logging_config.log_in_cli:
-    print(f"Experiment {config.logging_config.wandb_experiment_name} setup:")
-    print(utils.extract_experiment_metadata(config))
+print(f"Experiment {config.logging_config.wandb_experiment_name} setup:")
+print(utils.extract_experiment_metadata(config))
 
-if config.logging_config.wandb_enable:
-    run = logging.wandb_init_train(config)
+run = logging.wandb_init_train(config) if config.logging_config.wandb_enable else None
 
 device = torch.device(
     config.device if torch.cuda.is_available() else "cpu"
