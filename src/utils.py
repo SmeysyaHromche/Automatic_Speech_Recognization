@@ -1,10 +1,7 @@
 from pathlib import Path
 from src.config import TrainConfig
 import argparse
-import wandb
 import yaml
-
-WANDB_PROJECT = "SFC"
 
 def get_train_config() -> TrainConfig:
     path_to_config = get_config_path()
