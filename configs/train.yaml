@@ -38,4 +38,4 @@ logging_config:
   wandb_enable: False
   wandb_project_name: "SFC"
   wandb_experiment_name: "0.0.1"
-  logging_each_n_step: 50
+  logging_each_n_step: 1
