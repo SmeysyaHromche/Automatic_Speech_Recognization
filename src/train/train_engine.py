@@ -75,6 +75,7 @@ def train_one_epoch(
             if config.logging_config.log_in_cli and config.logging_config.log_in_cli_per_step:
                 logging.log_cli_one_train_step(
                     epoch=epoch,
+                    epochs=config.epochs,
                     idx_batch=idx_batch,
                     global_step=global_step,
                     loss_value=loss_value,
