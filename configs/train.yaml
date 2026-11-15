@@ -16,3 +16,9 @@ data:
     n_fft: 400
     hop_len: 160
     n_mels: 80
+
+logging:
+  log_in_cli: True,
+  wandb_enable: False
+  wandb_project_name: "SFC"
+  wandb_experiment_name: "0.0.1"

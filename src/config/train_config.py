@@ -1,4 +1,5 @@
 from .data_config import DataConfig
+from .logging_config import LoggingConfig
 from pydantic import BaseModel
 
 class TrainConfig(BaseModel):
@@ -8,3 +9,4 @@ class TrainConfig(BaseModel):
     lr:float
 
     data: DataConfig
+    logging_config: LoggingConfig
