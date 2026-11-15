@@ -1,16 +1,30 @@
+
 --extra-index-url https://download.pytorch.org/whl/cu128
 
+# Deep Learning / CUDA 12.8
 torch==2.7.1+cu128
 torchaudio==2.7.1+cu128
-scikit-learn==1.6.1
-numpy>=2.0
+
+# Data and numerical computing
+numpy==2.2.6
 pandas==2.2.3
+scikit-learn==1.6.1
 matplotlib==3.10.3
 PyYAML==6.0.2
-datasets==3.6.0
+
+# Audio processing
 soundfile==0.13.1
 librosa==0.11.0
+
+# Hugging Face
+# Temporarily leave unpinned for compatibility testing.
+datasets==3.1.0
+
+# Training utilities
 tqdm==4.67.1
-jupyterlab==4.4.3
 pydantic==2.11.7
 wandb==0.31.0
+jiwer==3.1.0
+
+# Development
+jupyterlab==4.4.3
