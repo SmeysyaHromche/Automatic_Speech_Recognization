@@ -24,14 +24,14 @@ class CNNEncoder(nn.Module):
 
         self.cnn = nn.Sequential(
             # [B, 1, 80, T]
-            nn.Conv2d(1, 32, 3, stride=2, padding=1),
+            nn.Conv2d(in_channels=1, out_channels=32, kernel_size=3, stride=2, padding=1),
             nn.BatchNorm2d(32),
             nn.ReLU(),
             # [B, 32, 40, T/2]
 
             ResidualBlock(32),
 
-            nn.Conv2d(32, 64, 3, stride=2, padding=1),
+            nn.Conv2d(in_channels=32, out_channels=64, kernel_size=3, stride=2, padding=1),
             nn.BatchNorm2d(64),
             nn.ReLU(),
             # [B, 64, 20, T/4]

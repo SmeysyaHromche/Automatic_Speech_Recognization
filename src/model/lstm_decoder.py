@@ -18,8 +18,10 @@ class LSTMDecoder(nn.Module):
             out_features=vocab_size
         )
 
-    def forward(self, x):
-        output, _ = self.lstm(x)
+    def forward(self, x, lengths):
+        packed_x = nn.utils.rnn.pack_padded_sequence(x, lengths, batch_first=True, enforce_sorted=False)
+        packed_output, _ = self.lstm(packed_x)
+        output, _ = nn.utils.rnn.pad_packed_sequence(packed_output, batch_first=True, total_length=x.size(1))
         logits = self.projection(output)
         
         return logits
