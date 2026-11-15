@@ -32,14 +32,3 @@ def extract_experiment_metadata(config:TrainConfig):
         "lr": config.lr,
         "batch_size": config.batch_size
     }
-
-def wandb_init_train(config:TrainConfig):
-    config_wandb = extract_experiment_metadata(config)
-
-    run = wandb.init(
-        project = config.logging_config.wandb_project_name,
-        name=config.logging_config.wandb_experiment_name,
-        config=config_wandb
-    )
-
-    return run
