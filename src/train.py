@@ -1,15 +1,13 @@
 
 from src.model import CNN_LSTM_model
-from pathlib import Path
 from src.data import AudioDataset, collate_fn, Vocabulary
-from src.utils import get_train_config
 from torch.utils.data import DataLoader
 import torch
+import src.utils as utils
 
 vocab = Vocabulary()
 
-path_to_config = Path("/home/xkukht01/Dev/SFC/configs/train.yaml")  # TODO: pargs args
-config = get_train_config(path_to_config)
+config = utils.get_train_config()
 
 device = torch.device(
     config.device if torch.cuda.is_available() else "cpu"
