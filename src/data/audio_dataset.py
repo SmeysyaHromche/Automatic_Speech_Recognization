@@ -10,17 +10,26 @@ class AudioDataset(IterableDataset):
     
     DATASET_PATH = "openslr/librispeech_asr"
 
-    def __init__(self, config:DataConfig):
+    def __init__(
+        self, 
+        config:DataConfig, 
+        shuffle:bool=False, 
+        train:bool=False
+    ):
         super().__init__()
         
         self.config = config
+        self.train = train
         
         self.dataset = datasets.load_dataset(
             self.DATASET_PATH, 
             self.config.dataset_name, 
             split=self.config.split, 
-            streaming=True).shuffle(seed=self.config.shuffle_seeds)
+            streaming=True)
 
+        if shuffle:
+            self.dataset = self.dataset.shuffle(seed=self.config.shuffle_seeds, buffer_size=100)
+        
         self.mel = torchaudio.transforms.MelSpectrogram(
             sample_rate=self.config.mel.sr,
             n_fft=self.config.mel.n_fft,
@@ -40,12 +49,12 @@ class AudioDataset(IterableDataset):
                     orig_freq=audio_sr,
                     new_freq=self.config.mel.sr
                 )
-            if self.config.augmentation.enable:
+            if self.train and self.config.augmentation.enable:
                 audio = audio_augmentation(audio)
             
             mel_audio = self.mel(audio)
             mel_audio = torch.log(mel_audio.clamp_min(1e-6))
-            if self.config.augmentation.mel_enable:
+            if self.train and self.config.augmentation.mel_enable:
                 mel_audio = mel_augmentation(mel_audio)
             mel_audio = mel_audio.unsqueeze(0)
             

@@ -28,11 +28,21 @@ def collate_fn(batch):
 
     return audios, texts, lengths
 
-def get_dataloader(config:DataConfig, with_batches:bool=False, batch_size:int=1) -> DataLoader:
-    dataset = AudioDataset(config)
+def get_dataloader(
+    config:DataConfig,
+    batch_size:int,
+    shuffle:bool=False,
+    train:bool=False
+) -> DataLoader:
+    dataset = AudioDataset(
+        config=config, 
+        shuffle=shuffle,
+        train=train
+    )
+
     dataloader = DataLoader(
         dataset=dataset,
-        batch_size=batch_size if with_batches else None,
+        batch_size=batch_size,
         collate_fn=collate_fn,
         num_workers=0
     )
@@ -40,7 +50,16 @@ def get_dataloader(config:DataConfig, with_batches:bool=False, batch_size:int=1)
     return dataloader
 
 def get_train_valid_dataloaders(config:TrainConfig) -> tuple[DataLoader, DataLoader]:
-    train_dataloader = get_dataloader(config.train_data, with_batches=True, batch_size=config.batch_size)
-    valid_dataloader = get_dataloader(config.validation_data)
+    train_dataloader = get_dataloader(
+        config.train_data, 
+        config.batch_size,
+        shuffle=True,
+        train=True
+    )
+
+    valid_dataloader = get_dataloader(
+        config.validation_data,
+        config.batch_size
+    )
 
     return train_dataloader, valid_dataloader
