@@ -71,7 +71,7 @@ def train_one_epoch(
 
         grad_norm_value = grad_norm.item()
 
-        if global_step + 1 % config.logging_config.logging_each_n_step == 0:
+        if (global_step + 1) % config.logging_config.logging_each_n_step == 0:
             if config.logging_config.log_in_cli and config.logging_config.log_in_cli_per_step:
                 logging.log_cli_one_train_step(
                     epoch=epoch,
