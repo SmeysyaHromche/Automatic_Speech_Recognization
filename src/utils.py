@@ -27,5 +27,7 @@ def extract_experiment_metadata(config:TrainConfig):
         "device": config.device,
         "epochs": config.epochs,
         "lr": config.lr,
-        "batch_size": config.batch_size
+        "batch_size": config.batch_size,
+        "audio_augmentation": config.train_data.augmentation.enable,
+        "log_mel_augmentation": config.train_data.augmentation.mel_enable,
     }

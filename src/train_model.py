@@ -31,6 +31,7 @@ ctc_loss = torch.nn.CTCLoss(blank=vocab.blank_id, zero_infinity=True)
 
 global_step = 0
 
+print("The training was started...")
 for epoch in range(config.epochs):
 
     global_step, avg_loss, avg_grad_norm = train.train_one_epoch(
@@ -73,6 +74,6 @@ for epoch in range(config.epochs):
             avg_loss_value=validation_avg_loss,
             wer_value=validation_wer
         )
-
+print("The training was successfully completed =)")
 if config.logging_config.wandb_enable:
     run.finish()
