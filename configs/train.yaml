@@ -34,7 +34,7 @@ validation_data:
 logging_config:
   log_in_cli: True
   log_in_cli_per_step: True
-  wandb_enable: False
+  wandb_enable: True
   wandb_project_name: "SFC"
   wandb_experiment_name: "baseline_no_audio_augm_no_mel_augm0.0.1"
   logging_each_n_step: 1
