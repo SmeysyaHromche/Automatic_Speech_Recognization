@@ -68,6 +68,7 @@ for epoch in range(config.epochs):
     if config.logging_config.wandb_enable and run is not None:
         logging.log_wandb_validation(
             run=run,
+            epoch=epoch,
             validation_prefix=logging.VALID_METRIC,
             avg_loss_value=validation_avg_loss,
             wer_value=validation_wer

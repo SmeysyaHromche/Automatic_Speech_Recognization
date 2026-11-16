@@ -22,10 +22,9 @@ validation_data:
   split: "validation"
   shuffle_seeds: 42
   augmentation:
-    enable: True
+    enable: False
     mel_enable: False
   mel:
-    enable: True
     sr: 16000
     n_fft: 400
     hop_len: 160
