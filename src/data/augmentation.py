@@ -30,7 +30,7 @@ def audio_augmentation(audio: torch.Tensor) -> torch.Tensor:
 
     return audio
 
-def mel_augmentation(mel_audio: torch.Tensor) -> torch.Tensor:
+def log_mel_augmentation(mel_audio: torch.Tensor) -> torch.Tensor:
     mel_audio = mel_audio.clone()
 
     n_mels, time_steps = mel_audio.shape

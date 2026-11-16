@@ -22,8 +22,8 @@ def evaluate(
     all_predictions = []
     all_targets = []
 
-    for idx_batch, (audios, texts, lengths) in enumerate(dataloader):
-        audios = audios.to(device)
+    for idx_batch, (log_mels, texts, lengths) in enumerate(dataloader):
+        log_mels = log_mels.to(device)
 
         target_sequences = [
             torch.tensor(model.vocab.encode(text), dtype=torch.long)
@@ -37,7 +37,7 @@ def evaluate(
 
         targets = torch.cat(target_sequences).to(device)
 
-        logits, input_lengths = model(audios, lengths)
+        logits, input_lengths = model(log_mels, lengths)
 
         log_probs = logits.log_softmax(dim=-1).permute(1, 0, 2)
 

@@ -23,9 +23,9 @@ def train_one_epoch(
     total_norm_grad = 0.0
     num_batches = 0
      
-    for idx_batch, (audios, texts, lengths) in enumerate(dataloader):
+    for idx_batch, (log_mels, texts, lengths) in enumerate(dataloader):
 
-        audios = audios.to(device)
+        log_mels = log_mels.to(device)
         
         target_sequences = [
             torch.tensor(model.vocab.encode(text), dtype=torch.long)
@@ -38,7 +38,7 @@ def train_one_epoch(
 
         targets = torch.cat(target_sequences).to(device)
 
-        logits, input_lengths = model(audios, lengths)
+        logits, input_lengths = model(log_mels, lengths)
 
         log_probs = logits.log_softmax(dim=-1)
         log_probs = log_probs.permute(1, 0, 2)
