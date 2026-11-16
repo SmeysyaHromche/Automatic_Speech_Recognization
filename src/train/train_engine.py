@@ -71,6 +71,8 @@ def train_one_epoch(
 
         grad_norm_value = grad_norm.item()
 
+        global_step += 1
+
         if (global_step + 1) % config.logging_config.logging_each_n_step == 0:
             if config.logging_config.log_in_cli and config.logging_config.log_in_cli_per_step:
                 logging.log_cli_one_train_step(
@@ -89,7 +91,6 @@ def train_one_epoch(
                     grad_norm_value=grad_norm_value
                 )
 
-        global_step += 1
         total_loss += loss_value
         total_norm_grad += grad_norm_value
         num_batches += 1
