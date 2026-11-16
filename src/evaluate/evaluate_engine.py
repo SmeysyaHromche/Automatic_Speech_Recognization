@@ -77,16 +77,17 @@ def evaluate(
 
     wer = metrics.compute_wer(all_targets=all_targets, all_predictions=all_predictions)
 
-    if (config.logging_config.random_gen_output > 0 and 
-        config.logging_config.random_gen_output > len(all_predictions)):
+    num_samples = min(config.logging_config.random_gen_output, len(all_predictions))
+
+    if num_samples > 0:
         random_gen_ids = random.sample(
-            range(0, len(all_predictions)), 
-            config.logging_config.random_gen_output
+            range(len(all_predictions)),
+            k=num_samples
         )
-        for id in random_gen_ids:
-            print(f"<{id}> Predicted: {all_predictions[id]}")
-            print(f"<{id}> Target: {all_targets[id]}")
+
+        for idx in random_gen_ids:
+            print(f"<{idx}> Predicted: {all_predictions[idx]}")
+            print(f"<{idx}> Target: {all_targets[idx]}")
             print()
-        pass
 
     return avg_loss, wer
