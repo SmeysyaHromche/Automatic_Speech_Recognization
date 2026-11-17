@@ -1,6 +1,6 @@
 batch_size: 16
 device: "cuda:0"
-epochs: 10
+epochs: 30
 lr: 0.001
 max_steps_per_epoch: -1
 id_for_model: "SFC0.0.1"
