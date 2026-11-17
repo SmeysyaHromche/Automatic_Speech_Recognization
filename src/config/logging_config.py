@@ -7,4 +7,4 @@ class LoggingConfig(BaseModel):
     wandb_project_name:str
     wandb_experiment_name:str
     logging_each_n_step: int
-    random_gen_output:bool
+    random_gen_output:int

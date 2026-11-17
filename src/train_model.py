@@ -1,11 +1,11 @@
-
+from pathlib import Path
 import torch
 import src.data as data
+import src.evaluate as evaluate
 import src.logging as logging
-import src.model as model
+import src.model as models
 import src.utils as utils
 import src.train as train
-import src.evaluate as evaluate
 
 vocab = data.Vocabulary()
 
@@ -20,7 +20,7 @@ device = torch.device(config.device if torch.cuda.is_available() else "cpu")
 
 train_dataloader, valid_dataloader = data.get_train_valid_dataloaders(config)
 
-model = model.CNN_LSTM_model(
+model = models.CNN_LSTM_model(
     encoder_output_dim=256,
     hidden_decoder_dim=256,
     vocab=vocab
@@ -31,7 +31,16 @@ ctc_loss = torch.nn.CTCLoss(blank=vocab.blank_id, zero_infinity=True)
 
 global_step = 0
 
+best_validation_wer = float("inf")
+best_epoch = -1
+
+path_to_best_model = Path(config.path_to_best_model)
+path_to_best_model.parent.mkdir(parents=True, exist_ok=True)
+path_to_last_model = Path(config.path_to_last_model)
+path_to_last_model.parent.mkdir(parents=True, exist_ok=True)
+
 print("The training was started...")
+exit(0)
 for epoch in range(config.epochs):
 
     global_step, avg_loss, avg_grad_norm = train.train_one_epoch(
@@ -74,6 +83,37 @@ for epoch in range(config.epochs):
             avg_loss_value=validation_avg_loss,
             wer_value=validation_wer
         )
+
+    if validation_wer < best_validation_wer:
+        best_validation_wer = validation_wer
+        best_epoch = epoch
+
+        logging.save_model(
+            path_to_save=path_to_best_model,
+            epoch=epoch,
+            global_step=global_step,
+            model=model,
+            optimizer=optimizer,
+            valid_wer=validation_wer,
+            valid_loss=validation_avg_loss
+        )
+
+        print(
+            f"New best model saved! "
+            f"Epoch: {epoch + 1}, "
+            f"WER: {best_validation_wer:.4f}"
+        )
+
+    logging.save_model(
+        path_to_save=path_to_last_model,
+        epoch=epoch,
+        global_step=global_step,
+        model=model,
+        optimizer=optimizer,
+        valid_wer=validation_wer,
+        valid_loss=validation_avg_loss
+    )
+
 print("The training was successfully completed =)")
-if config.logging_config.wandb_enable:
+if run is not None:
     run.finish()

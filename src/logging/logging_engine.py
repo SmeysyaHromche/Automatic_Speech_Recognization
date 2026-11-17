@@ -1,4 +1,6 @@
+from pathlib import Path
 from src.config import TrainConfig
+import torch
 import wandb
 
 GLOBAL_STEP_DIM = "global_step"
@@ -97,3 +99,25 @@ def log_cli_validation(
     wer_value:float  
 ) -> None:
     print(f"Eval per epoch: {epoch}/{epochs} epoch, {avg_loss_value:.4f} avg loss, {wer_value:.4f} wer")
+
+
+def save_model(
+    path_to_save:Path,
+    epoch:int,
+    global_step:int,
+    model:torch.nn.Module,
+    optimizer: torch.optim.Optimizer,
+    valid_wer:float,
+    valid_loss:float,
+):
+    torch.save(
+        {
+            "epoch": epoch,
+            "global_step": global_step,
+            "model_state_dict": model.state_dict(),
+            "optimizer_state_dict": optimizer.state_dict(),
+            "validation_wer": valid_wer,
+            "validation_loss": valid_loss,
+        },
+        path_to_save
+    )
