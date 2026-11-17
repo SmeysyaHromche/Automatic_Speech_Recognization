@@ -40,7 +40,6 @@ path_to_last_model = Path(config.path_to_last_model)
 path_to_last_model.parent.mkdir(parents=True, exist_ok=True)
 
 print("The training was started...")
-exit(0)
 for epoch in range(config.epochs):
 
     global_step, avg_loss, avg_grad_norm = train.train_one_epoch(

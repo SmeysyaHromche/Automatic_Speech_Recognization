@@ -38,6 +38,6 @@ logging_config:
   log_in_cli_per_step: True
   wandb_enable: True
   wandb_project_name: "SFC"
-  wandb_experiment_name: "baseline_no_audio_augm_no_mel_augm0.0.1"
-  logging_each_n_step: 1
+  wandb_experiment_name: "baseline_no_audio_augm_no_mel_augm0.0.2"
+  logging_each_n_step: 50
   random_gen_output: 3
