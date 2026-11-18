@@ -8,8 +8,7 @@ class TrainConfig(BaseModel):
     epochs:int
     lr:float
     max_steps_per_epoch:int
-    path_to_best_model:str
-    path_to_last_model:str
+
 
     train_data: DataConfig
     validation_data: DataConfig

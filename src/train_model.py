@@ -34,14 +34,16 @@ global_step = 0
 best_validation_wer = float("inf")
 best_epoch = -1
 
-path_to_log_file = Path(config.logging_config.path_log_file) if config.logging_config.path_log_file is not None or config.logging_config.path_log_file != "" else None
+path_to_log_file = Path(config.logging_config.path_to_log_file) if config.logging_config.path_to_log_file is not None or config.logging_config.path_to_log_file != "" else None
 if path_to_log_file is not None:
     path_to_log_file.parent.mkdir(parents=True, exist_ok=True)
     open("file.txt", "w").close()
+    print(f"loggs will be in {path_to_log_file}")
 
-path_to_best_model = Path(config.path_to_best_model)
+path_to_log_file = Path(config.logging_config.path_to_log_file) if config.logging_config.path_to_log_file is not None or config.logging_config.path_to_log_file != "" else None
+path_to_best_model = Path(config.logging_config.path_to_best_model)
 path_to_best_model.parent.mkdir(parents=True, exist_ok=True)
-path_to_last_model = Path(config.path_to_last_model)
+path_to_last_model = Path(config.logging_config.path_to_last_model)
 path_to_last_model.parent.mkdir(parents=True, exist_ok=True)
 
 print("The training was started...")
