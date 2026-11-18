@@ -1,1 +1,1 @@
-from .metrics import compute_wer
+from .metrics import compute_cer_wer
