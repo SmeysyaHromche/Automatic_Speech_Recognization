@@ -80,15 +80,15 @@ def train_one_epoch(
                     epochs=config.epochs,
                     idx_batch=idx_batch,
                     global_step=global_step,
-                    loss_value=loss_value,
-                    grad_norm_value=grad_norm_value
+                    loss=loss_value,
+                    grad_norm=grad_norm_value
                 )
             if config.logging_config.wandb_enable:
                 logging.log_wandb_one_train_step(
                     run=run, 
                     global_step=global_step, 
-                    loss_value=loss_value, 
-                    grad_norm_value=grad_norm_value
+                    loss=loss_value, 
+                    grad_norm=grad_norm_value
                 )
 
         total_loss += loss_value

@@ -1,6 +1,6 @@
 import jiwer
 
-def compute_wer(all_targets:list[str], all_predictions:list[str]) -> float:
+def compute_cer_wer(all_targets:list[str], all_predictions:list[str]) -> tuple[float, float]:
     all_predictions = [
         " ".join(text.upper().split())
         for text in all_predictions
@@ -11,6 +11,7 @@ def compute_wer(all_targets:list[str], all_predictions:list[str]) -> float:
         for text in all_targets
     ]
 
+    cer = jiwer.cer(all_targets, all_predictions)
     wer = jiwer.wer(all_targets, all_predictions)
 
-    return wer
+    return cer, wer

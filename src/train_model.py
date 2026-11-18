@@ -51,18 +51,18 @@ for epoch in range(config.epochs):
         logging.log_cli_one_train_epoch(
             epoch=epoch, 
             epochs=config.epochs,
-            avg_loss_value=avg_loss, 
-            avg_grad_norm_value=avg_grad_norm
+            avg_loss=avg_loss, 
+            avg_grad_norm=avg_grad_norm
         )
     if config.logging_config.wandb_enable:
         logging.log_wandb_one_train_epoch(
             run=run, 
             epoch=epoch, 
-            avg_loss_value=avg_loss,
-            avg_grad_norm_value=avg_grad_norm
+            avg_loss=avg_loss,
+            avg_grad_norm=avg_grad_norm
         )
 
-    validation_avg_loss, validation_wer = evaluate.evaluate(
+    validation_avg_loss, validation_cer, validation_wer = evaluate.evaluate(
         config=config, epoch=epoch, dataloader=valid_dataloader,
         model=model, device=device, ctc_loss=ctc_loss
     )
@@ -71,16 +71,18 @@ for epoch in range(config.epochs):
         logging.log_cli_validation(
             epoch=epoch,
             epochs=config.epochs,
-            avg_loss_value=validation_avg_loss,
-            wer_value=validation_wer
+            avg_loss=validation_avg_loss,
+            cer=validation_cer,
+            wer=validation_wer
         )
     if config.logging_config.wandb_enable and run is not None:
         logging.log_wandb_validation(
             run=run,
             epoch=epoch,
             validation_prefix=logging.VALID_METRIC,
-            avg_loss_value=validation_avg_loss,
-            wer_value=validation_wer
+            avg_loss=validation_avg_loss,
+            cer=validation_cer,
+            wer=validation_wer
         )
 
     if validation_wer < best_validation_wer:
@@ -93,13 +95,15 @@ for epoch in range(config.epochs):
             global_step=global_step,
             model=model,
             optimizer=optimizer,
-            valid_wer=validation_wer,
-            valid_loss=validation_avg_loss
+            validation_cer=validation_cer,
+            validation_wer=validation_wer,
+            validation_loss=validation_avg_loss
         )
 
         print(
             f"New best model saved! "
             f"Epoch: {epoch + 1}, "
+            f"CER: {validation_cer:.4f}"
             f"WER: {best_validation_wer:.4f}"
         )
 
@@ -109,8 +113,9 @@ for epoch in range(config.epochs):
         global_step=global_step,
         model=model,
         optimizer=optimizer,
-        valid_wer=validation_wer,
-        valid_loss=validation_avg_loss
+        validation_cer=validation_cer,
+        validation_wer=validation_wer,
+        validation_loss=validation_avg_loss
     )
 
 print("The training was successfully completed =)")

@@ -3,6 +3,7 @@ notebooks/.data
 .keys/
 wandb/
 .models/
+.logs/.shadow/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

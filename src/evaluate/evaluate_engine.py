@@ -13,7 +13,7 @@ def evaluate(
     model: nn.Module,
     device: torch.device,
     ctc_loss: nn.CTCLoss
-):
+) -> tuple[float, float, float]:
     model.eval()
 
     total_loss = 0.0
@@ -75,7 +75,7 @@ def evaluate(
 
     avg_loss = total_loss / num_batches
 
-    wer = metrics.compute_wer(all_targets=all_targets, all_predictions=all_predictions)
+    cer, wer = metrics.compute_cer_wer(all_targets=all_targets, all_predictions=all_predictions)
 
     num_samples = min(config.logging_config.random_gen_output, len(all_predictions))
 
@@ -90,4 +90,4 @@ def evaluate(
             print(f"<{idx}> Target: {all_targets[idx]}")
             print()
 
-    return avg_loss, wer
+    return avg_loss, cer, wer
