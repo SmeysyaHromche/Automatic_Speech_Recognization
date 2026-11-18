@@ -37,7 +37,7 @@ logging_config:
   wandb_enable: True
   wandb_project_name: "SFC"
   wandb_experiment_name: "baseline_no_audio_augm_no_mel_augm0.0.3"
-  logging_each_n_step: -1
+  logging_each_n_step: 50
   random_gen_output: 3  
   path_to_log_file: ".logs/log_train.txt"
   path_to_best_model: ".models/exp1/best_model.pt"
