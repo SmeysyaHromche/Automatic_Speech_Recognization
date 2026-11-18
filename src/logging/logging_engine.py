@@ -1,5 +1,6 @@
 from pathlib import Path
 from src.config import TrainConfig
+import random
 import torch
 import wandb
 
@@ -9,6 +10,10 @@ EPOCH_DIM = "epoch"
 TRAIN_STEP_METRIC = "train/step_"
 TRAIN_EPOCH_METRIC = "train/epoch_"
 VALID_METRIC = "valid/"
+
+def write_to_log_file(path_to_log_file:Path, log:str):
+    with open(path_to_log_file, "r", encoding="utf-8") as f:
+        f.write(f"{log}\n")
 
 def extract_experiment_metadata(config:TrainConfig):
     return  {
@@ -55,9 +60,13 @@ def log_cli_one_train_step(
     idx_batch:int,
     global_step:int,
     loss:float,
-    grad_norm:float      
+    grad_norm:float,
+    path_to_log_file:Path|None=None
 ) -> None:
-    print(f"Train per step: {epoch}/{epochs} epoch, {idx_batch} batch, {global_step} glob step, {loss:.4f} loss, {grad_norm:.4f} grad")
+    log = f"Train per step: {epoch}/{epochs} epoch, {idx_batch} batch, {global_step} glob step, {loss:.4f} loss, {grad_norm:.4f} grad"
+    print(log)
+    if path_to_log_file is not None:
+        write_to_log_file(path_to_log_file, log)
 
 def log_wandb_one_train_epoch(
     run:wandb.Run,
@@ -75,9 +84,13 @@ def log_cli_one_train_epoch(
     epoch:int,
     epochs:int,
     avg_loss:float,
-    avg_grad_norm:float      
+    avg_grad_norm:float,
+    path_to_log_file:Path|None=None      
 ) -> None:
-    print(f"Train per epoch: {epoch}/{epochs} epoch, {avg_loss:.4f} avg loss, {avg_grad_norm:.4f} avg grad norm")
+    log = f"Train per epoch: {epoch}/{epochs} epoch, {avg_loss:.4f} avg loss, {avg_grad_norm:.4f} avg grad norm"
+    print(log)
+    if path_to_log_file is not None:
+        write_to_log_file(path_to_log_file, log)
 
 def log_wandb_validation(
     run:wandb.Run,
@@ -99,10 +112,38 @@ def log_cli_validation(
     epochs:int,
     avg_loss:float,
     cer:float, 
-    wer:float  
+    wer:float,
+    path_to_log_file:Path|None=None    
 ) -> None:
-    print(f"Eval per epoch: {epoch}/{epochs} epoch, {avg_loss:.4f} avg loss, {cer:.4f} cer, {wer:.4f} wer")
+    log = f"Eval per epoch: {epoch}/{epochs} epoch, {avg_loss:.4f} avg loss, {cer:.4f} cer, {wer:.4f} wer"
+    print(log)
+    if path_to_log_file is not None:
+        write_to_log_file(path_to_log_file, log)
 
+
+def log_random_predicitions(
+    all_predictions: list[str],
+    all_targets: list[str],
+    random_gen_output:int,
+    path_to_log_file:Path|None=None
+) -> None:
+    num_samples = min(random_gen_output, len(all_predictions))
+
+    if num_samples > 0:
+        random_gen_ids = random.sample(
+            range(len(all_predictions)),
+            k=num_samples
+        )
+
+        for idx in random_gen_ids:
+            log_predicted = f"<{idx}> Predicted: {all_predictions[idx]}"
+            log_target = f"<{idx}> Target: {all_targets[idx]}"
+            print(log_predicted)
+            print(log_target)
+
+            if path_to_log_file is not None:
+                write_to_log_file(path_to_log_file, log_predicted)
+                write_to_log_file(path_to_log_file, log_target)
 
 def save_model(
     path_to_save:Path,

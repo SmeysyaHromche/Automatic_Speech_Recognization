@@ -1,9 +1,10 @@
+from pathlib import Path
 from src.config import TrainConfig
 from torch.utils.data import DataLoader
+import src.logging as logging
 import src.metrics as metrics
 import torch
 import torch.nn as nn
-import random
 
 @torch.inference_mode()
 def evaluate(
@@ -12,7 +13,8 @@ def evaluate(
     dataloader: DataLoader,
     model: nn.Module,
     device: torch.device,
-    ctc_loss: nn.CTCLoss
+    ctc_loss: nn.CTCLoss,
+    path_to_log_file:Path|None=None
 ) -> tuple[float, float, float]:
     model.eval()
 
@@ -77,17 +79,11 @@ def evaluate(
 
     cer, wer = metrics.compute_cer_wer(all_targets=all_targets, all_predictions=all_predictions)
 
-    num_samples = min(config.logging_config.random_gen_output, len(all_predictions))
-
-    if num_samples > 0:
-        random_gen_ids = random.sample(
-            range(len(all_predictions)),
-            k=num_samples
-        )
-
-        for idx in random_gen_ids:
-            print(f"<{idx}> Predicted: {all_predictions[idx]}")
-            print(f"<{idx}> Target: {all_targets[idx]}")
-            print()
+    logging.log_random_predicitions(
+        all_predictions=all_predictions,
+        all_targets=all_targets,
+        random_gen_output=config.logging_config.random_gen_output,
+        path_to_log_file=path_to_log_file
+    )
 
     return avg_loss, cer, wer

@@ -1,3 +1,4 @@
+from pathlib import Path
 from src.config import TrainConfig
 from torch.utils.data import DataLoader
 import src.logging as logging
@@ -15,7 +16,8 @@ def train_one_epoch(
         device:torch.device,
         optimizer: optim.Optimizer,
         ctc_loss:nn.CTCLoss,
-        run:wb.Run|None=None
+        run:wb.Run|None=None,
+        path_to_log_file:Path|None=None
     ) -> tuple[int, float, float]:
     model.train()
 
@@ -81,7 +83,8 @@ def train_one_epoch(
                     idx_batch=idx_batch,
                     global_step=global_step,
                     loss=loss_value,
-                    grad_norm=grad_norm_value
+                    grad_norm=grad_norm_value,
+                    path_to_log_file=path_to_log_file
                 )
             if config.logging_config.wandb_enable:
                 logging.log_wandb_one_train_step(

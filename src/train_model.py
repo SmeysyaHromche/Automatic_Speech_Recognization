@@ -34,6 +34,11 @@ global_step = 0
 best_validation_wer = float("inf")
 best_epoch = -1
 
+path_to_log_file = Path(config.logging_config.path_log_file) if config.logging_config.path_log_file is not None or config.logging_config.path_log_file != "" else None
+if path_to_log_file is not None:
+    path_to_log_file.parent.mkdir(parents=True, exist_ok=True)
+    open("file.txt", "w").close()
+
 path_to_best_model = Path(config.path_to_best_model)
 path_to_best_model.parent.mkdir(parents=True, exist_ok=True)
 path_to_last_model = Path(config.path_to_last_model)
@@ -44,7 +49,8 @@ for epoch in range(config.epochs):
 
     global_step, avg_loss, avg_grad_norm = train.train_one_epoch(
         config=config, epoch=epoch, global_step=global_step, dataloader=train_dataloader,
-        model=model, device=device, run=run, optimizer=optimizer, ctc_loss=ctc_loss
+        model=model, device=device, run=run, optimizer=optimizer, ctc_loss=ctc_loss,
+        path_to_log_file=path_to_log_file
     )
 
     if config.logging_config.log_in_cli and not config.logging_config.log_in_cli_per_step:
@@ -52,7 +58,8 @@ for epoch in range(config.epochs):
             epoch=epoch, 
             epochs=config.epochs,
             avg_loss=avg_loss, 
-            avg_grad_norm=avg_grad_norm
+            avg_grad_norm=avg_grad_norm,
+            path_to_log_file=path_to_log_file
         )
     if config.logging_config.wandb_enable:
         logging.log_wandb_one_train_epoch(
@@ -73,7 +80,8 @@ for epoch in range(config.epochs):
             epochs=config.epochs,
             avg_loss=validation_avg_loss,
             cer=validation_cer,
-            wer=validation_wer
+            wer=validation_wer,
+            path_to_log_file=path_to_log_file,
         )
     if config.logging_config.wandb_enable and run is not None:
         logging.log_wandb_validation(

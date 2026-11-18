@@ -6,6 +6,7 @@ max_steps_per_epoch: -1
 id_for_model: "SFC0.0.1"
 path_to_best_model: ".models/exp1/best_model.pt"
 path_to_last_model: ".models/exp1/last_model.pt"
+path_to_log_file: ".logs/log_train.txt"
 
 train_data:
   dataset_name: "clean"
@@ -35,9 +36,9 @@ validation_data:
 
 logging_config:
   log_in_cli: True
-  log_in_cli_per_step: True
+  log_in_cli_per_step: False
   wandb_enable: True
   wandb_project_name: "SFC"
-  wandb_experiment_name: "baseline_no_audio_augm_no_mel_augm0.0.2"
-  logging_each_n_step: 50
+  wandb_experiment_name: "baseline_no_audio_augm_no_mel_augm0.0.3"
+  logging_each_n_step: -1
   random_gen_output: 3
