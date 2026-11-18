@@ -12,7 +12,7 @@ TRAIN_EPOCH_METRIC = "train/epoch_"
 VALID_METRIC = "valid/"
 
 def write_to_log_file(path_to_log_file:Path, log:str):
-    with open(path_to_log_file, "r", encoding="utf-8") as f:
+    with open(path_to_log_file, "a", encoding="utf-8") as f:
         f.write(f"{log}\n")
 
 def extract_experiment_metadata(config:TrainConfig):
