@@ -1,5 +1,6 @@
 from .augmentation_config import AugmentationConfig
 from .data_config import DataConfig
+from .encoder_config import EncoderConfig
 from .logging_config import LoggingConfig
 from .mel_config import MelConfig
 from .train_config import TrainConfig
