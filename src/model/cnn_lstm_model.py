@@ -1,27 +1,27 @@
 from .cnn_encoder import CNNEncoder
 from .lstm_decoder import LSTMDecoder
 from src.data import Vocabulary
+from src.config import EncoderConfig, DecoderConfig
 import torch
 
 class CNN_LSTM_model(torch.nn.Module):
     def __init__(
             self, 
-            encoder_output_dim:int, 
-            hidden_decoder_dim:int,
+            encoder_config:EncoderConfig, 
+            decoder_config:int,
             vocab:Vocabulary
         ):
         super().__init__()
         
-        self.encoder = CNNEncoder(encoder_output_dim)
-        self.decoder = LSTMDecoder(encoder_output_dim, hidden_decoder_dim, len(vocab))
+        self.encoder = CNNEncoder(encoder_config)
+        self.decoder = LSTMDecoder(self.encoder.out_dim, decoder_config, len(vocab))
         self.vocab = vocab
 
 
     def forward(self, x, lengths):
         x = self.encoder(x)
 
-        output_lengths = (lengths + 1) // 2
-        output_lengths = (output_lengths + 1) // 2
+        output_lengths = self.encoder.get_output_lengths(lengths)
 
         logits = self.decoder(x, output_lengths)
 

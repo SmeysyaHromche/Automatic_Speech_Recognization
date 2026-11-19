@@ -85,6 +85,18 @@ class CNNEncoder(nn.Module):
 
         self.projection = nn.Linear(self.out_dim * freq, config.d_model)
 
+    def get_output_lengths(self, lengths):
+        for module in self.cnn.modules():
+            if isinstance(module, nn.Conv2d):
+                kernel = module.kernel_size[1]
+                stride = module.stride[1]
+                padding = module.padding[1]
+                dilation = module.dilation[1]
+
+                lengths = (lengths + 2 * padding - dilation * (kernel - 1) - 1) // stride + 1
+
+        return lengths
+
     def forward(self, x):
         x = self.cnn(x)
 
