@@ -52,8 +52,6 @@ class ClassicConvBlock(nn.Module):
     def forward(self, x):
         return self.block(x)
 
-
-# TODO: ReLU vs GeLU
 class CNNEncoder(nn.Module):
     def __init__(self, config:EncoderConfig):
         super().__init__()
@@ -83,8 +81,9 @@ class CNNEncoder(nn.Module):
             freq = (freq + 1) // 2
 
         self.cnn = nn.Sequential(*layers)
+        self.out_dim = in_channels
 
-        self.projection = nn.Linear(in_channels * freq, config.d_model)
+        self.projection = nn.Linear(self.out_dim * freq, config.d_model)
 
     def forward(self, x):
         x = self.cnn(x)
