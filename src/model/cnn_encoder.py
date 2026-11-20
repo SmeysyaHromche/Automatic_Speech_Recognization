@@ -10,7 +10,7 @@ def get_activation(activation_str:str):
     elif activation_str == "selu":
         return nn.SELU()
 
-    raise ValueError(f"Unknown activation fn: {activation_str}")
+    raise ValueError(f"Unknown activation fn: {activation_str}! Use: gelu, relu, selu")
 
 def get_normalization_layer(normalization_str: str, channels: int):
     if normalization_str == "batch":
@@ -21,7 +21,7 @@ def get_normalization_layer(normalization_str: str, channels: int):
             raise ValueError("Channels must be divisible by 8")
         return nn.GroupNorm(8, channels)
 
-    raise ValueError(f"Unknown normalization: {normalization_str}")
+    raise ValueError(f"Unknown normalization: {normalization_str}! Use: batch, group")
 
 class ResidualBlock(nn.Module):
     def __init__(self, channels:int, activation_fn:str, norm_blck:str):
@@ -58,7 +58,7 @@ class CNNEncoder(nn.Module):
 
         layers = []
         in_channels = 1
-        freq = config.n_mels
+        freq = config.n_mel
         for out_channels, num_blocks in zip(config.channels, config.res_blocks_per_stage,):
             layers.append(
                 ClassicConvBlock(

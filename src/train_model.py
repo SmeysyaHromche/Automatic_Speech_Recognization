@@ -21,12 +21,12 @@ device = torch.device(config.device if torch.cuda.is_available() else "cpu")
 train_dataloader, valid_dataloader = data.get_train_valid_dataloaders(config)
 
 model = models.CNN_LSTM_model(
-    encoder_output_dim=256,
-    hidden_decoder_dim=256,
+    encoder_config=config.encoder,
+    decoder_config=config.decoder,
     vocab=vocab
 ).to(device)
 
-optimizer = torch.optim.Adam(params=model.parameters(), lr=config.lr)
+optimizer, scheduler = utils.get_optimizer(config, model)
 ctc_loss = torch.nn.CTCLoss(blank=vocab.blank_id, zero_infinity=True)
 
 global_step = 0
@@ -34,25 +34,26 @@ global_step = 0
 best_validation_wer = float("inf")
 best_epoch = -1
 
-path_to_log_file = Path(config.logging_config.path_to_log_file) if config.logging_config.path_to_log_file is not None or config.logging_config.path_to_log_file != "" else None
+log_path = config.logging_config.path_to_log_file
+path_to_log_file = Path(log_path) if log_path else None
 if path_to_log_file is not None:
     path_to_log_file.parent.mkdir(parents=True, exist_ok=True)
-    open("file.txt", "w").close()
+    path_to_log_file.touch()
     print(f"loggs will be in {path_to_log_file}")
 
-path_to_log_file = Path(config.logging_config.path_to_log_file) if config.logging_config.path_to_log_file is not None or config.logging_config.path_to_log_file != "" else None
 path_to_best_model = Path(config.logging_config.path_to_best_model)
 path_to_best_model.parent.mkdir(parents=True, exist_ok=True)
 path_to_last_model = Path(config.logging_config.path_to_last_model)
 path_to_last_model.parent.mkdir(parents=True, exist_ok=True)
 
 print("The training was started...")
+exit(0)
 for epoch in range(config.epochs):
-
+    epoch += 1
     global_step, avg_loss, avg_grad_norm = train.train_one_epoch(
         config=config, epoch=epoch, global_step=global_step, dataloader=train_dataloader,
-        model=model, device=device, run=run, optimizer=optimizer, ctc_loss=ctc_loss,
-        path_to_log_file=path_to_log_file
+        model=model, device=device, run=run, optimizer=optimizer, scheduler=scheduler,
+        ctc_loss=ctc_loss, path_to_log_file=path_to_log_file
     )
 
     if config.logging_config.log_in_cli and not config.logging_config.log_in_cli_per_step:
@@ -112,8 +113,8 @@ for epoch in range(config.epochs):
 
         print(
             f"New best model saved! "
-            f"Epoch: {epoch + 1}, "
-            f"CER: {validation_cer:.4f}"
+            f"Epoch: {epoch}, "
+            f"CER: {validation_cer:.4f}, "
             f"WER: {best_validation_wer:.4f}"
         )
 

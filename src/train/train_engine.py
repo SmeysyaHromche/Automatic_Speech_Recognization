@@ -15,6 +15,7 @@ def train_one_epoch(
         model:nn.Module,
         device:torch.device,
         optimizer: optim.Optimizer,
+        scheduler:torch.optim.lr_scheduler.CosineAnnealingLR,
         ctc_loss:nn.CTCLoss,
         run:wb.Run|None=None,
         path_to_log_file:Path|None=None
@@ -52,10 +53,7 @@ def train_one_epoch(
             target_lengths
         )
         if not torch.isfinite(loss):
-            raise RuntimeError(
-                f"Non-finite loss at epoch={epoch}, "
-                f"batch={idx_batch}, step={global_step}"
-            )
+            raise RuntimeError(f"Non-finite loss at epoch={epoch}, batch={idx_batch}, step={global_step}")
         
         optimizer.zero_grad(set_to_none=True)
 
@@ -75,7 +73,7 @@ def train_one_epoch(
 
         global_step += 1
 
-        if config.logging_config.logging_each_n_step > 0 and (global_step + 1) % config.logging_config.logging_each_n_step == 0:
+        if config.logging_config.logging_each_n_step > 0 and global_step % config.logging_config.logging_each_n_step == 0:
             if config.logging_config.log_in_cli and config.logging_config.log_in_cli_per_step:
                 logging.log_cli_one_train_step(
                     epoch=epoch,
@@ -103,6 +101,8 @@ def train_one_epoch(
 
     if num_batches == 0:
         raise RuntimeError("No training batches processed")
+    else:    
+        scheduler.step()
     
     avg_loss = total_loss / num_batches
     avg_norm_grad = total_norm_grad / num_batches
