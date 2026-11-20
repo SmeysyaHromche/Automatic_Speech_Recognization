@@ -38,7 +38,7 @@ def get_optimizer(config:TrainConfig, model:torch.nn.Module)->tuple[torch.optim.
     if config.optimizer == "adam":
         optimizer = torch.optim.Adam(params=model.parameters(), lr=config.lr)
     elif config.optimizer == "adamw":
-        optimizer = torch.optim.AdamW(params=model.params, lr=config.lr)
+        optimizer = torch.optim.AdamW(params=model.parameters(), lr=config.lr)
     else:
         raise ValueError(f"Unkown optimizer:{config.optimizer}! Use: adam, adamw")
     
