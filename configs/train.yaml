@@ -2,8 +2,34 @@ batch_size: 16
 device: "cuda:0"
 epochs: 30
 lr: 0.001
+lr_scheduler: False
+optimizer: "adam"
 max_steps_per_epoch: -1
-id_for_model: "SFC0.0.1"
+
+encoder:
+  normalization: "batch"
+  activation_fn: "relu"
+  n_mel: 8
+  channels: [32, 64]
+  strides: [2, 2]
+  res_blocks_per_stage: [1, 1]
+decoder:
+  hidden_size: 256
+  num_layer: 2
+
+train_data:
+  dataset_name: "clean"
+  split: "train.100"
+  shuffle_seeds: 42
+  augmentation:
+    enable: True
+    mel_enable: True
+  mel:
+    sr: 16000
+    n_fft: 400
+    hop_len: 160
+    n_mels: 80
+
 
 train_data:
   dataset_name: "clean"
