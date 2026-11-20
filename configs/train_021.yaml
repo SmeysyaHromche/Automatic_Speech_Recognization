@@ -9,7 +9,7 @@ max_steps_per_epoch: -1
 encoder:
   normalization: "batch"
   activation_fn: "relu"
-  n_mel: 8
+  n_mel: 80
   d_model: 256
   channels: [32, 64]
   strides: [2, 2]

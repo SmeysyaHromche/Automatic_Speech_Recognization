@@ -9,7 +9,7 @@ max_steps_per_epoch: -1
 encoder:
   normalization: "batch"
   activation_fn: "relu"
-  n_mel: 8
+  n_mel: 80
   d_model: 256
   channels: [32, 64]
   strides: [2, 2]
@@ -61,7 +61,7 @@ validation_data:
 logging_config:
   log_in_cli: True
   log_in_cli_per_step: False
-  wandb_enable: True
+  wandb_enable: False
   wandb_project_name: "SFC"
   wandb_experiment_name: "baseline_no_audio_augm_no_mel_augm0.0.3"
   logging_each_n_step: 50
