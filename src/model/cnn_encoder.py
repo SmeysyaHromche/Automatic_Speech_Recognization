@@ -81,9 +81,10 @@ class CNNEncoder(nn.Module):
             freq = (freq + 1) // 2
 
         self.cnn = nn.Sequential(*layers)
-        self.out_dim = in_channels
+        self.cnn_out_channel = in_channels
+        self.out_dim = config.d_model
 
-        self.projection = nn.Linear(self.out_dim * freq, config.d_model)
+        self.projection = nn.Linear(self.cnn_out_channel * freq, self.out_dim)
 
     def get_output_lengths(self, lengths):
         for module in self.cnn.modules():
