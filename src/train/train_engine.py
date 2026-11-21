@@ -15,8 +15,8 @@ def train_one_epoch(
         model:nn.Module,
         device:torch.device,
         optimizer: optim.Optimizer,
-        scheduler:torch.optim.lr_scheduler.CosineAnnealingLR,
         ctc_loss:nn.CTCLoss,
+        scheduler:torch.optim.lr_scheduler.CosineAnnealingLR,
         run:wb.Run|None=None,
         path_to_log_file:Path|None=None
     ) -> tuple[int, float, float]:
@@ -101,8 +101,9 @@ def train_one_epoch(
 
     if num_batches == 0:
         raise RuntimeError("No training batches processed")
-    else:    
-        scheduler.step()
+    else:
+        if scheduler is not None:    
+            scheduler.step()
     
     avg_loss = total_loss / num_batches
     avg_norm_grad = total_norm_grad / num_batches
