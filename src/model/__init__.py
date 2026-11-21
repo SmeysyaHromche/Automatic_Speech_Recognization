@@ -1,3 +1,3 @@
 from .cnn_encoder import CNNEncoder
-from .lstm_decoder import LSTMDecoder
-from .cnn_lstm_model import CNN_LSTM_model
+from .rnn_decoder import RNNDecoder
+from .cnn_rnn_model import CNN_RNN_model

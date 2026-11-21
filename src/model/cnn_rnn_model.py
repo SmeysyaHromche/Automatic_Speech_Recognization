@@ -1,10 +1,10 @@
 from .cnn_encoder import CNNEncoder
-from .lstm_decoder import LSTMDecoder
+from .rnn_decoder import RNNDecoder
 from src.data import Vocabulary
 from src.config import EncoderConfig, DecoderConfig
 import torch
 
-class CNN_LSTM_model(torch.nn.Module):
+class CNN_RNN_model(torch.nn.Module):
     def __init__(
             self, 
             encoder_config:EncoderConfig, 
@@ -14,7 +14,7 @@ class CNN_LSTM_model(torch.nn.Module):
         super().__init__()
         
         self.encoder = CNNEncoder(encoder_config)
-        self.decoder = LSTMDecoder(self.encoder.out_dim, decoder_config, len(vocab))
+        self.decoder = RNNDecoder(self.encoder.out_dim, decoder_config, len(vocab))
         self.vocab = vocab
 
 

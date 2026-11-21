@@ -15,8 +15,11 @@ encoder:
   strides: [2, 2]
   res_blocks_per_stage: [1, 1]
 decoder:
+  rnn: "lstm"
   hidden_size: 256
   num_layer: 2
+  norm: false
+  projection: "linear"
 
 train_data:
   dataset_name: "clean"

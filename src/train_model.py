@@ -20,7 +20,7 @@ device = torch.device(config.device if torch.cuda.is_available() else "cpu")
 
 train_dataloader, valid_dataloader = data.get_train_valid_dataloaders(config)
 
-model = models.CNN_LSTM_model(
+model = models.CNN_RNN_model(
     encoder_config=config.encoder,
     decoder_config=config.decoder,
     vocab=vocab
