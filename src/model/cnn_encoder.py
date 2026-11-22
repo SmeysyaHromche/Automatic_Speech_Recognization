@@ -41,10 +41,10 @@ class ResidualBlock(nn.Module):
         return self.activation(x + self.layers(x))
 
 class ClassicConvBlock(nn.Module):
-    def __init__(self, in_channels:int, out_channels:int, norm_blck:str, activation_fn:str):
+    def __init__(self, in_channels:int, out_channels:int, stride:int, norm_blck:str, activation_fn:str):
         super().__init__()
         self.block = nn.Sequential(
-            nn.Conv2d(in_channels=in_channels, out_channels=out_channels, kernel_size=3, stride=2, padding=1),
+            nn.Conv2d(in_channels=in_channels, out_channels=out_channels, kernel_size=3, stride=stride, padding=1),
             get_normalization_layer(normalization_str=norm_blck, channels=out_channels),
             get_activation(activation_fn)
         )
@@ -59,11 +59,12 @@ class CNNEncoder(nn.Module):
         layers = []
         in_channels = 1
         freq = config.n_mel
-        for out_channels, num_blocks in zip(config.channels, config.res_blocks_per_stage,):
+        for out_channels, num_blocks, stride in zip(config.channels, config.res_blocks_per_stage, config.strides):
             layers.append(
                 ClassicConvBlock(
                     in_channels=in_channels,
                     out_channels=out_channels,
+                    stride=stride,
                     norm_blck=config.normalization,
                     activation_fn=config.activation_fn
             ))
@@ -78,7 +79,7 @@ class CNNEncoder(nn.Module):
                 )
 
             in_channels = out_channels
-            freq = (freq + 1) // 2
+            freq = (freq + stride + 1) // 2
 
         self.cnn = nn.Sequential(*layers)
         self.cnn_out_channel = in_channels
