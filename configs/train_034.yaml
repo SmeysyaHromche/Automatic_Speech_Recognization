@@ -53,7 +53,7 @@ logging_config:
   log_in_cli_shape_output_batch: False
   wandb_enable: True
   wandb_project_name: "SFC"
-  wandb_experiment_name: "baseline_full_augm_adamw_scheduler_gelu_deep_width0.3.3"
+  wandb_experiment_name: "baseline_full_augm_adamw_scheduler_gelu_deep_width0.3.4"
   logging_each_n_step: 50
   random_gen_output: 3
   path_to_log_file: ".logs/log_train_baseline_full_augm_adamw_scheduler_gelu_deep_width034.txt"
