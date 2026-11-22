@@ -50,6 +50,7 @@ validation_data:
 logging_config:
   log_in_cli: True
   log_in_cli_per_step: False
+  log_in_cli_shape_output_batch: False
   wandb_enable: True
   wandb_project_name: "SFC"
   wandb_experiment_name: "baseline_full_augm_adamw_scheduler_gelu_width0.3.2"

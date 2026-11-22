@@ -41,6 +41,12 @@ def evaluate(
 
         logits, input_lengths = model(log_mels, lengths)
 
+        if idx_batch == 0 and config.logging_config.log_in_cli_shape_output_batch:
+            logging.lig_in_cli_shape_output_batch(
+                model=model, lengths=lengths, logits=logits,
+                input_lengths=input_lengths, target_lengths=target_lengths
+            )
+
         log_probs = logits.log_softmax(dim=-1).permute(1, 0, 2)
 
         loss = ctc_loss(

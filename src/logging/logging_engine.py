@@ -167,3 +167,24 @@ def save_model(
         },
         path_to_save
     )
+
+def lig_in_cli_shape_output_batch(model, lengths, logits, input_lengths, target_lengths):
+    predicted_ids = logits.argmax(dim=-1)
+
+    print("Logits shape:", logits.shape)
+    print("Original lengths:", lengths[:5].tolist())
+    print("CTC input lengths:", input_lengths[:5].tolist())
+    print("Target lengths:", target_lengths[:5].tolist())
+
+    for i in range(min(3, logits.size(0))):
+        valid_ids = predicted_ids[i, :int(input_lengths[i])]
+
+        blank_ratio = (valid_ids == 0).float().mean().item()
+
+        unique_ids, counts = torch.unique(valid_ids, return_counts=True)
+
+        print(f"Sample {i}")
+        print("Blank ratio:", round(blank_ratio, 4))
+        print("Unique predicted IDs:", unique_ids.tolist())
+        print("Counts:", counts.tolist())
+        print("Decoded:", model.vocab.ctc_decode(valid_ids.cpu().tolist()))

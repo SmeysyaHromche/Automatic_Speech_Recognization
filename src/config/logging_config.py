@@ -3,6 +3,7 @@ from pydantic import BaseModel
 class LoggingConfig(BaseModel):
     log_in_cli:bool
     log_in_cli_per_step:bool
+    log_in_cli_shape_output_batch:bool
     wandb_enable:bool
     wandb_project_name:str
     wandb_experiment_name:str
