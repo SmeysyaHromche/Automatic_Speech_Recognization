@@ -24,14 +24,14 @@ def get_normalization_layer(normalization_str: str, channels: int):
     raise ValueError(f"Unknown normalization: {normalization_str}! Use: batch, group")
 
 class ResidualBlock(nn.Module):
-    def __init__(self, channels:int, activation_fn:str, norm_blck:str):
+    def __init__(self, channels:int, kernel_size:int, padding:int, activation_fn:str, norm_blck:str):
         super().__init__()
 
         self.layers = nn.Sequential(
-            nn.Conv2d(channels, channels, 3, padding=1),
+            nn.Conv2d(in_channels=channels, out_channels=channels, kernel_size=kernel_size, padding=padding),
             get_normalization_layer(normalization_str=norm_blck, channels=channels),
             get_activation(activation_fn),
-            nn.Conv2d(channels, channels, 3, padding=1),
+            nn.Conv2d(in_channels=channels, out_channels=channels, kernel_size=kernel_size, padding=padding),
             get_normalization_layer(normalization_str=norm_blck, channels=channels)
         )
 
@@ -41,10 +41,10 @@ class ResidualBlock(nn.Module):
         return self.activation(x + self.layers(x))
 
 class ClassicConvBlock(nn.Module):
-    def __init__(self, in_channels:int, out_channels:int, stride:int, norm_blck:str, activation_fn:str):
+    def __init__(self, in_channels:int, out_channels:int, kernel_size:int, stride:int, padding:int, norm_blck:str, activation_fn:str):
         super().__init__()
         self.block = nn.Sequential(
-            nn.Conv2d(in_channels=in_channels, out_channels=out_channels, kernel_size=3, stride=stride, padding=1),
+            nn.Conv2d(in_channels=in_channels, out_channels=out_channels, kernel_size=kernel_size, stride=stride, padding=padding),
             get_normalization_layer(normalization_str=norm_blck, channels=out_channels),
             get_activation(activation_fn)
         )
@@ -53,6 +53,8 @@ class ClassicConvBlock(nn.Module):
         return self.block(x)
 
 class CNNEncoder(nn.Module):
+    KERNEL_SIZE = 3
+    PADDING = 1
     def __init__(self, config:EncoderConfig):
         super().__init__()
 
@@ -64,7 +66,9 @@ class CNNEncoder(nn.Module):
                 ClassicConvBlock(
                     in_channels=in_channels,
                     out_channels=out_channels,
+                    kernel_size=self.KERNEL_SIZE,
                     stride=stride,
+                    padding=self.PADDING,
                     norm_blck=config.normalization,
                     activation_fn=config.activation_fn
             ))
@@ -73,13 +77,15 @@ class CNNEncoder(nn.Module):
                 layers.append(
                     ResidualBlock(
                         channels=out_channels,
+                        kernel_size=self.KERNEL_SIZE,
+                        padding=self.PADDING,
                         activation_fn=config.activation_fn,
                         norm_blck=config.normalization,
                     )
                 )
 
             in_channels = out_channels
-            freq = (freq + stride + 1) // 2
+            freq = (freq + 2 * self.PADDING -  (self.KERNEL_SIZE - 1) - 1) // stride + 1
 
         self.cnn = nn.Sequential(*layers)
         self.cnn_out_channel = in_channels
