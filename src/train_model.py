@@ -111,12 +111,7 @@ for epoch in range(config.epochs):
             validation_loss=validation_avg_loss
         )
 
-        print(
-            f"New best model saved! "
-            f"Epoch: {epoch}, "
-            f"CER: {validation_cer:.4f}, "
-            f"WER: {best_validation_wer:.4f}"
-        )
+        print(f"New best model saved! Epoch: {epoch}, CER: {validation_cer:.4f}, WER: {best_validation_wer:.4f}")
 
     logging.save_model(
         path_to_save=path_to_last_model,
