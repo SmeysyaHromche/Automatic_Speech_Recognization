@@ -63,15 +63,9 @@ def evaluate(
 
         loss_value = loss.item()
 
-        predicted_ids = logits.argmax(dim=-1).cpu()
-        input_lengths_cpu = input_lengths.cpu()
 
-        for predicted_sequence, output_length in zip(predicted_ids, input_lengths_cpu):
-            predicted_sequence = predicted_sequence[:int(output_length)]
-
-            predicted_text = model.vocab.ctc_decode(predicted_sequence.tolist())
-
-            all_predictions.append(predicted_text)
+        predictions = model.decode(logits, input_lengths)
+        all_predictions.extend(predictions)
 
         all_targets.extend(texts)
 

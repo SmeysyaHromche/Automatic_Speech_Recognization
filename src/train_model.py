@@ -23,6 +23,7 @@ train_dataloader, valid_dataloader = data.get_train_valid_dataloaders(config)
 model = models.CNN_RNN_model(
     encoder_config=config.encoder,
     decoder_config=config.decoder,
+    search_config=config.search,
     vocab=vocab
 ).to(device)
 
