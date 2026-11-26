@@ -22,12 +22,12 @@ decoder:
   projection: "linear"
 
 search:
-  search_policy: "beam"
-  beam_width: 3
+  search_policy: "greedy"
+  beam_width: 1
 
 train_data:
   dataset_name: "clean"
-  split: "train.100"
+  split: "train.360"
   shuffle_seeds: 42
   augmentation:
     enable: True
@@ -60,6 +60,6 @@ logging_config:
   wandb_experiment_name: "adamw_scheduler_lstm_deep_been3_0.5.1"
   logging_each_n_step: 50
   random_gen_output: 3
-  path_to_log_file: ".logs/log_train_adamw_scheduler_lstm_deep_been3_051.txt"
-  path_to_best_model: ".models/exp1/best_model_adamw_scheduler_lstm_deep_been3_051.pt"
-  path_to_last_model: ".models/exp1/last_model_adamw_scheduler_lstm_deep_been3_051.pt"
+  path_to_log_file: ".logs/log_train_adamw_scheduler_deep_lstm_data_051.txt"
+  path_to_best_model: ".models/exp1/best_model_adamw_scheduler_deep_lstm_data_051.pt"
+  path_to_last_model: ".models/exp1/last_model_adamw_scheduler_deep_lstm_data_051.pt"
