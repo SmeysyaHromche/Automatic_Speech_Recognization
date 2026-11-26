@@ -20,6 +20,10 @@ decoder:
   num_layer: 2
   norm: false
   projection: "linear"
+  
+search:
+  search_policy: "greedy"
+  beam_width: 1
 
 train_data:
   dataset_name: "clean"
