@@ -1,0 +1,61 @@
+batch_size: 16
+device: "cuda:0"
+epochs: 30
+lr: 0.001
+lr_scheduler: False
+optimizer: "adam"
+max_steps_per_epoch: -1
+
+encoder:
+  normalization: "batch"
+  activation_fn: "relu"
+  n_mel: 80
+  d_model: 256
+  channels: [32, 64]
+  strides: [2, 2]
+  res_blocks_per_stage: [1, 1]
+decoder:
+  rnn: "lstm"
+  hidden_size: 256
+  num_layer: 2
+  norm: False
+  projection: "linear"
+
+train_data:
+  dataset_name: "clean"
+  split: "train.100"
+  shuffle_seeds: 42
+  augmentation:
+    enable: True
+    mel_enable: True
+  mel:
+    sr: 16000
+    n_fft: 400
+    hop_len: 160
+    n_mels: 80
+
+validation_data:
+  dataset_name: "clean"
+  split: "validation"
+  shuffle_seeds: 42
+  augmentation:
+    enable: False
+    mel_enable: False
+  mel:
+    sr: 16000
+    n_fft: 400
+    hop_len: 160
+    n_mels: 80
+
+logging_config:
+  log_in_cli: True
+  log_in_cli_per_step: False
+  log_in_cli_shape_output_batch: False
+  wandb_enable: True
+  wandb_project_name: "SFC"
+  wandb_experiment_name: "baseline_full_augm_0.1.4"
+  logging_each_n_step: 50
+  random_gen_output: 3
+  path_to_log_file: ".logs/log_train_baseline_full_augm014.txt"
+  path_to_best_model: ".models/exp1/best_model_baseline_full_augm014.pt"
+  path_to_last_model: ".models/exp1/last_model_baseline_full_augm014.pt"
