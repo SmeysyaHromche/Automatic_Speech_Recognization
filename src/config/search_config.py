@@ -1,5 +1,5 @@
 from pydantic import BaseModel
 
-class SearchConfig:
+class SearchConfig(BaseModel):
     search_policy:str
     beam_width:int
